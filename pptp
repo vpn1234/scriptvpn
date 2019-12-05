@@ -23,3 +23,6 @@ add comment=vpn-maspur distance=1 dst-address=8.8.8.8/32 gateway=vpn-games
 add action=mark-connection chain=prerouting comment=vpn-games connection-rate=1-384k dst-port=!80,443,5222,5228,1935,8080,8888,182,282,5050,5060 new-connection-mark=vpn-conn passthrough=yes protocol=tcp
 add action=mark-connection chain=prerouting comment=vpn-games connection-rate=1-384k dst-port=!80,8080,443 new-connection-mark=vpn-conn passthrough=yes protocol=udp
 add action=mark-routing chain=prerouting comment=vpn-games connection-mark=vpn-conn new-routing-mark=vpn-games passthrough=yes
+
+### selesai####
+
