@@ -1,0 +1,25 @@
+Keterangan :
+A.B.C.D diganti dengan ip server yg saya berikan
+xxxxx diganti dengan password yg saya berikan
+yyyyy diganti udengan username yg saya berikan
+
+copy script dibawah ini ke new terminal di winbox
+setelah di script di pasang, lihat mangle
+pindahkan mangle vpn-games ke baris paling atas
+
+####script
+/interface pptp-client
+add connect-to=A.B.C.D disabled=no name=vpn-games password=xxxxx user=yyyyy
+
+/ip firewall nat
+add action=masquerade chain=srcnat comment=vpn-maspur out-interface=vpn-games
+
+/ip route
+add distance=1 gateway=vpn-games routing-mark=vpn-games
+add comment=vpn-maspur distance=1 dst-address=8.8.4.4/32 gateway=vpn-games
+add comment=vpn-maspur distance=1 dst-address=8.8.8.8/32 gateway=vpn-games
+
+/ip firewall mangle
+add action=mark-connection chain=prerouting comment=vpn-games connection-rate=1-384k dst-port=!80,443,5222,5228,1935,8080,8888,182,282,5050,5060 new-connection-mark=vpn-conn passthrough=yes protocol=tcp
+add action=mark-connection chain=prerouting comment=vpn-games connection-rate=1-384k dst-port=!80,8080,443 new-connection-mark=vpn-conn passthrough=yes protocol=udp
+add action=mark-routing chain=prerouting comment=vpn-games connection-mark=vpn-conn new-routing-mark=vpn-games passthrough=yes
